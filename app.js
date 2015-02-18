@@ -36,16 +36,11 @@ function poll()
 
 				// Basic information
 				var name = l.pm2_env.name
-				var keyUptime = 'Component/' + name + '[uptime]';
-				var keyRestarts = 'Component/' + name + '[restarts]';
-				var keyCpu = 'Component/' + name + '[cpu]';
-				var keyMemory = 'Component/' + name + '[memory]';
-
 				var metrics = {};
-				metrics[keyUptime] = calcUptime(l.pm2_env.pm_uptime);
-				metrics[keyRestarts] = l.pm2_env.restart_time;
-				metrics[keyCpu] = l.monit.cpu;
-				metrics[keyMemory] = l.monit.memory;
+				metrics['Component/pm2[uptime]'] = calcUptime(l.pm2_env.pm_uptime);
+				metrics['Component/pm2[restarts]'] = l.pm2_env.restart_time;
+				metrics['Component/pm2[cpu]'] = l.monit.cpu;
+				metrics['Component/pm2[memory]'] = l.monit.memory;
 
 				var cmp = {};
 				cmp['name'] = name;

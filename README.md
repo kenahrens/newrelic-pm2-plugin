@@ -1,5 +1,5 @@
 # pm2plugin
-
+This plugin will pull data from PM2 and publish to New Relic
 
 # Installation instructions
 Make sure you have all of the dependencies (pm2, request, and os)

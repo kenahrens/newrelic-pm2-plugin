@@ -1,7 +1,7 @@
 {
   "name": "pm2plugin",
   "version": "1.0.0",
-  "nrlicense": "LICENSE_KEY",
+  "nrlicense": "93b58084f0f856a6f2e500f639826e7327f1433c",
   "nrguid": "com.newrelic.pm2plugin",
   "nrurl": "https://platform-api.newrelic.com/platform/v1/metrics",
   "description": "New Relic plugin to pull in data from PM2",
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kahrens",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "pm2": "^0.12.5",
     "request": "^2.53.0"

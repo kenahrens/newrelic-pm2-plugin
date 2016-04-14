@@ -8,7 +8,7 @@
   "main": "app.js",
   "repository": "https://github.com/kenahrens/newrelic-pm2-plugin",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "author": "kahrens",
   "license": "MIT",

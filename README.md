@@ -1,4 +1,5 @@
 # pm2plugin
+[![Build Status](https://travis-ci.org/kenahrens/newrelic-pm2-plugin.svg?branch=master)](https://travis-ci.org/kenahrens/newrelic-pm2-plugin)
 This plugin will pull data from PM2 and publish to New Relic as a plugin
 
 # Installation instructions

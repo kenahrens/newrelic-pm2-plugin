@@ -1,2 +1,5 @@
 # Dependency directory
 node_modules
+
+# User's own config.json
+config.json

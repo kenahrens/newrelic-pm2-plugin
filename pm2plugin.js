@@ -1,13 +1,13 @@
 var pm2 = require('pm2');
 var os = require('os');
 var request = require('request');
-var pjson = require('./package.json')
 
 // Plugin Variables
-var ver = pjson.version;
-var license = pjson.nrlicense;
-var guid = pjson.nrguid;
-var url = pjson.nrurl;
+var config = require('./config.json');
+var ver = config.nrversion;
+var license = config.nrlicense;
+var guid = config.nrguid;
+var url = config.nrurl;
 
 function poll()
 {
@@ -24,7 +24,7 @@ function poll()
 			agent.host = os.hostname();
 			agent.pid = process.pid;
 			agent.version = ver;
-			
+
 			var msg = {};
 			msg.agent = agent;
 
@@ -54,7 +54,7 @@ function poll()
 			postToNewRelic(msg);
 		});
 	});
-	
+
 	// Re-run every 60s
 	setTimeout(poll, 60000)
 }

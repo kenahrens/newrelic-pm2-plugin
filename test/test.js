@@ -1,4 +1,4 @@
-var app = require('../app.js');
+var app = require('../pm2plugin.js');
 var assert = require('assert');
 
 describe('newrelic-pm2-plugin', function() {

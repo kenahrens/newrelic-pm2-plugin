@@ -1,5 +1,6 @@
 var assert = require('assert');
-var fs = require('fs');
+var fs = require('fs-extra');
+var path = require('path');
 
 describe('newrelic-pm2-plugin', function() {
   before(function(){
@@ -10,8 +11,8 @@ describe('newrelic-pm2-plugin', function() {
     } catch (e) {
       // Create a temp config.json
       console.log('creating a temporary config.json for testing');
-      fs.createReadStream('../config-template.json').pipe(fs.createWriteStream('../config.json'));
-      console.log('temporary config.json created');
+      fs.copySync(path.resolve(__dirname, '../config-template.json'),
+        path.resolve(__dirname, '../config.json'));
     }
   });
   it('loads', function() {

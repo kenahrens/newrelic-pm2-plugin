@@ -1,4 +1,3 @@
-var app = require('../pm2plugin.js');
 var assert = require('assert');
 var fs = require('fs');
 
@@ -16,7 +15,7 @@ describe('newrelic-pm2-plugin', function() {
     }
   });
   it('loads', function() {
-
+    var app = require('../pm2plugin.js');
   });
   after(function() {
 

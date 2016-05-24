@@ -9,4 +9,10 @@ Need to install the dependencies and setup the config
 - Run plugin under PM2 with ```pm2 start ./pm2plugin.js```
 - Data should show up under pm2plugin in your New Relic account
 
-![PM2 Dashboard](/images/pm2dashboard.png)
+![PM2 Dashboard](/images/pm2-plugin-home.jpg)
+
+# History
+
+- 1.0.2 - Support for multiple PM2 Servers (run on each PM2 instance)
+- 1.0.1 - Support for single PM2 Server only, separate config file
+- 1.0.0 - Initial prototype

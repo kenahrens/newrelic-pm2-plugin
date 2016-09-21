@@ -1,6 +1,6 @@
 {
   "name": "pm2plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "New Relic plugin to pull in data from PM2",
   "main": "app.js",
   "repository": "https://github.com/kenahrens/newrelic-pm2-plugin",

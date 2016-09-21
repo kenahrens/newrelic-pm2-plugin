@@ -96,11 +96,12 @@ function postToNewRelic(msg) {
 		},
 		body: msgString
 	}, function (err, httpResponse, body) {
-		console.log('New Relic Reponse: %d', httpResponse.statusCode);
-		if(body) {
-			console.log('Response from NR: ' + body);
-		}
-		if(err) {
+		if (!err) {
+			console.log('New Relic Reponse: %d', httpResponse.statusCode);
+			if(body) {
+				console.log('Response from NR: ' + body);
+			}
+		} else {
 			console.log('*** ERROR ***');
 			console.log(err);
 		}

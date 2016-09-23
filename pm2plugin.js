@@ -74,9 +74,12 @@ function poll()
 			metrics['Component/rollup/all[restarts]'] = totalRestarts;
 			metrics['Component/rollup/all[cpu]'] = totalCpu;
 			metrics['Component/rollup/all[memory]'] = totalMemory;
-
+	
 			// console.log(msg.components[0]);
 			postToNewRelic(msg);
+
+			// Disconnect from PM2
+			pm2.disconnect();
 		});
 	});
 

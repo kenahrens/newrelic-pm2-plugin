@@ -2,12 +2,17 @@ var pm2 = require('pm2');
 var os = require('os');
 var request = require('request');
 
+// Version needs to be outside the config file
+var ver = '1.1.0';
+
 // Plugin Variables
 var config = require('./config.json');
-var ver = config.nrversion;
 var license = config.nrlicense;
 var guid = config.nrguid;
 var url = config.nrurl;
+
+// Running restart 
+var restartList = {};
 
 function poll()
 {
@@ -40,40 +45,89 @@ function poll()
 			// Create the metrics subsection
 			var metrics = {};
 			components[0].metrics = metrics;
+
+			// Process Totals
+			var processArr = {};
+
+			// PM2 Totals
 			var totalUptime = 0;
 			var totalRestarts = 0;
 			var totalCpu = 0;
 			var totalMemory = 0;
+			var totalIntervalRestarts = 0;
 
 			// Pull down data for each function
 			list.forEach(function(proc) {
 
 				// Get the metrics
+				var processPid = proc.pm_id;
 				var processName = proc.pm2_env.name;
 				var processUptime = calcUptime(proc.pm2_env.pm_uptime);
-				var processRestarts = proc.pm2_env.restart_time;
+				var processTotalRestarts = proc.pm2_env.restart_time;
 				var processCpu = proc.monit.cpu;
 				var processMemory = proc.monit.memory;
 
+				// Calculate per interval restarts
+				var processPreviousRestarts = restartList[processName] || 0;
+				var processIntervalRestarts = processTotalRestarts - processPreviousRestarts;
+				restartList[processName] = processTotalRestarts;
+
 				// Store the metrics
-				var namePrefix = 'Component/process/' + processName;
+				var namePrefix = 'Component/id/' + processPid + '/' + processName;
 				metrics[namePrefix + '[uptime]'] = processUptime;
-				metrics[namePrefix + '[restarts]'] = processRestarts;
+				metrics[namePrefix + '[restarts]'] = processTotalRestarts;
 				metrics[namePrefix + '[cpu]'] = processCpu;
 				metrics[namePrefix + '[memory]'] = processMemory;
+				metrics[namePrefix + '[intervalRestarts]'] = processIntervalRestarts;
 
-				// Increment the totals
+				// Increment the Process totals
+				var currentProcess = processArr[processName];
+				if (currentProcess != null) {
+					currentProcess.count++;
+					currentProcess.uptime += processUptime;
+					currentProcess.totalRestarts += processTotalRestarts;
+					currentProcess.cpu += processCpu;
+					currentProcess.memory += processMemory;
+					currentProcess.intervalRestarts += processIntervalRestarts;
+					processArr[processName] = currentProcess;
+				} else {
+					// Initialize the data for this process
+					processArr[processName] = {
+						'count': 1,
+						'uptime': processUptime,
+						'totalRestarts': processTotalRestarts,
+						'cpu': processCpu,
+						'memory': processMemory,
+						'intervalRestarts': processIntervalRestarts
+					}
+				}
+
+				// Increment the PM2 totals
 				totalUptime += processUptime;
-				totalRestarts += processRestarts;
+				totalRestarts += processTotalRestarts;
 				totalCpu += processCpu;
 				totalMemory += processMemory;
+				totalIntervalRestarts += processIntervalRestarts;
 			});
 
-			// Create the rollup metrics
+			// Create the Process rollup metrics
+			for (var processName in processArr) {
+				var currentProcess = processArr[processName];
+				var namePrefix = 'Component/process/' + processName;
+				metrics[namePrefix + '[count]'] = currentProcess.count;
+				metrics[namePrefix + '[uptime]'] = currentProcess.uptime;
+				metrics[namePrefix + '[restarts]'] = currentProcess.totalRestarts;
+				metrics[namePrefix + '[cpu]'] = currentProcess.cpu;
+				metrics[namePrefix + '[memory]'] = currentProcess.memory;
+				metrics[namePrefix + '[intervalRestarts]'] = currentProcess.intervalRestarts;
+			}
+
+			// Create the PM2 rollup metrics
 			metrics['Component/rollup/all[uptime]'] = totalUptime;
 			metrics['Component/rollup/all[restarts]'] = totalRestarts;
 			metrics['Component/rollup/all[cpu]'] = totalCpu;
 			metrics['Component/rollup/all[memory]'] = totalMemory;
+			metrics['Component/rollup/all[intervalRestarts]'] = totalIntervalRestarts;
 	
 			// console.log(msg.components[0]);
 			postToNewRelic(msg);
@@ -89,6 +143,7 @@ function poll()
 
 function postToNewRelic(msg) {
 	var msgString = JSON.stringify(msg);
+	// console.log(msg.components[0].metrics);
 	request({
 		url: url,
 		method: "POST",
@@ -117,4 +172,5 @@ function calcUptime(date) {
 	return seconds;
 }
 
+console.log('Starting PM2 Plugin version: ' + ver);
 poll();

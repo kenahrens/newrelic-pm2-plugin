@@ -13,6 +13,7 @@ Need to install the dependencies and setup the config
 
 # History
 
+- 1.1.0 - Metrics for each PM2 process and added restarts per interval
 - 1.0.4 - Close the connection to PM2 on each poll cycle
 - 1.0.3 - Fix for when errors are not properly handled from Plugin API
 - 1.0.2 - Support for multiple PM2 Servers (run on each PM2 instance)
